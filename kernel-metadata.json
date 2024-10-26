@@ -1,0 +1,15 @@
+{
+    "id": "mcbridem2045/mcbride-arc-2024",
+    "title": "McBride-ARC-2024",
+    "code_file": "mcbride-arc-2024.ipynb",
+    "language": "python",
+    "kernel_type": "notebook",
+    "is_private": "true",
+    "enable_gpu": "true",
+    "enable_tpu": "false",
+    "enable_internet": "true",
+    "dataset_sources": [],
+    "competition_sources": [],
+    "kernel_sources": [],
+    "model_sources": []
+}
