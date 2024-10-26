@@ -36,7 +36,8 @@ logger = logging.getLogger(__name__)
 
 # Custom files
 from src.utils.utils import load_and_log_first_task
-
+from src.faces.llm_llama3_2_3B import generate_llama_response
+from src.utils.prompt_library import PromptTemplates
 
 # Option 1 (Recommended for T4 x2): Enable tokenizer parallelism
 # T4s have enough memory and processing power to benefit from parallel tokenization
@@ -57,19 +58,40 @@ practice_path = 'data/practice_training_challenge.json'
 # Load challenges and log the first task
 challenge_tasks = load_and_log_first_task(practice_path)
 
+# When processing a task
 if challenge_tasks:
-    # Get the first task ID and data
-        # Load all task IDs into an array
-    task_ids = list(challenge_tasks.keys())
     first_task_id = next(iter(challenge_tasks))
     first_task_data = challenge_tasks[first_task_id]
 
-    # Now you can work with the first task
-    print(f"Working with task ID: {first_task_id}")
+    # Get first training pair
+    first_pair = first_task_data['train'][0]
 
-    # If you want to process all tasks, you can still do so:
-    # for task_id, task_data in challenge_tasks.items():
-    #     result = solve_arc_task(task_data)
-    #     # Process or store the result as needed
+    # Initialize PromptTemplates
+    prompt_lib = PromptTemplates()
+
+    # Define analysis types
+    analysis_types = [
+        ('boolean', 'pattern_analysis'),
+        ('visual', 'pattern_analysis'),
+        ('program', 'synthesis')
+    ]
+
+    # Generate prompts and responses for each analysis type
+    for category, name in analysis_types:
+        messages = prompt_lib.get_prompt(
+            category=category,
+            name=name,
+            input_grid=str(first_pair['input']),
+            output_grid=str(first_pair['output'])
+        )
+        
+        # Combine messages into a single string for the LLM
+        combined_message = "\n\n".join([f"{msg['role'].upper()}:\n{msg['content']}" for msg in messages])
+        
+        # Generate response using the LLM
+        response = generate_llama_response(combined_message)
+        print(f"\nResponse for {category} {name}:\n{response}")
+
 else:
     print("Failed to load challenge tasks.")
+
