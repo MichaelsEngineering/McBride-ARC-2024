@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=42"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mcbride-arc-2024"
+version = "0.1.0"
+description = "ARC Prize 2024 submission"
+authors = [{name = "Michael McBride"}]
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v -s --strict-markers"
